@@ -54,7 +54,9 @@ class PackageHandler(tornado.web.RequestHandler):
 				os.remove(home + "/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf");
 
 			os.remove(zip_name);
+			print("Package created")
 		else:
+			print("Cannot package for payment " + data["paymentNumber"])
 			self.set_status(401)
 			self.set_header("Content-Type", "application/json");
 			self.write({"error": {"reason": "payment failed"}})
@@ -66,10 +68,12 @@ def make_app():
 	return tornado.web.Application([
 		(r"/", MainHandler),
 		(r"/create-package/", PackageHandler),
-		], **settings)
+		])
 
 
 if __name__ == "__main__":
 	app = make_app()
-app.listen(8000)
+	print("App Launched")
+
+app.listen(8003)
 tornado.ioloop.IOLoop.current().start()
