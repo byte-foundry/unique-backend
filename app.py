@@ -1,4 +1,5 @@
 import os
+import pathlib
 import zipfile
 import uuid
 
@@ -21,13 +22,14 @@ class PackageHandler(tornado.web.RequestHandler):
 		# Generate receipt
 		# create zip with everything and send to email
 		data = tornado.escape.json_decode(self.request.body)
+		home = str(pathlib.Path.home())
 
 		if check_stripe_payment(data["paymentNumber"]):
 			zip_name = "tmp/" + str(uuid.uuid4()) + ".zip"
 			zip_to_send = zipfile.ZipFile(zip_name, mode="x", compression=zipfile.ZIP_LZMA)
 
 			for font in data["fonts"]:
-				font_file = open("/home/franzp/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf", "wb+");
+				font_file = open(home + "/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf", "wb+");
 				font_bytes = bytearray(font["data"]["data"])
 				font_file.write(font_bytes)
 				zip_to_send.writestr(data["family"] + " " + font["variant"] + ".otf", font_bytes)
@@ -51,7 +53,9 @@ class PackageHandler(tornado.web.RequestHandler):
 			self.write("nay")
 
 		for font in data["fonts"]:
-			os.remove("/home/franzp/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf");
+			os.remove(home + "/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf");
+
+		os.remove(zip_name);
 
 def make_app():
 	settings = {
