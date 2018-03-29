@@ -49,13 +49,15 @@ class PackageHandler(tornado.web.RequestHandler):
 			binary_zip = open(zip_name, 'rb')
 
 			self.write(binary_zip.read())
+
+			for font in data["fonts"]:
+				os.remove(home + "/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf");
+
+			os.remove(zip_name);
 		else:
-			self.write("nay")
-
-		for font in data["fonts"]:
-			os.remove(home + "/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf");
-
-		os.remove(zip_name);
+			self.set_status(401)
+			self.set_header("Content-Type", "application/json");
+			self.write({"error": {"reason": "payment failed"}})
 
 def make_app():
 	settings = {
