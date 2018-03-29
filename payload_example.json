@@ -1,0 +1,24 @@
+{
+	"family": "familyName",
+	"fonts": [
+		{
+			"variant": "blah",
+			"data": ArrayBuffer
+		}
+	],
+	"invoice": {
+		"choices": [
+			{
+				"name": "specimen",
+				"price": 0
+			},
+			{
+				"name": "otf",
+				"price": 15
+			}
+		],
+		"currency": "$"
+	},
+	"paymentNumber": "ch_mkljqdfml",
+	"customerId": "cus_mjsqmdfl"
+}
