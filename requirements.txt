@@ -1,0 +1,14 @@
+decorator==4.0.6
+futures==3.0.5
+greenlet==0.4.10
+ipython==2.4.1
+msgpack-python==0.4.8
+neovim==0.1.10
+pexpect==4.0.1
+ptyprocess==0.5
+pycurl==7.43.0
+python-apt==1.1.0b1
+simplegeneric==0.8.1
+six==1.10.0
+trollius==2.1
+vboxapi==1.0
