@@ -39,7 +39,7 @@ class PackageHandler(tornado.web.RequestHandler):
 
 		if check_stripe_payment(data["paymentNumber"]):
 			zip_name = "tmp/" + str(uuid.uuid4()) + ".zip"
-			zip_to_send = zipfile.ZipFile(zip_name, mode="x", compression=zipfile.ZIP_LZMA)
+			zip_to_send = zipfile.ZipFile(zip_name, mode="x", compression=zipfile.ZIP_DEFLATED)
 
 			for font in data["fonts"]:
 				font_file = open(home + "/.fonts/" + font["variant"] + "-" + data["paymentNumber"] + ".otf", "wb+");
