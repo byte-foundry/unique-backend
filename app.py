@@ -40,7 +40,7 @@ class PackageHandler(tornado.web.RequestHandler):
 			zip_to_send = zipfile.ZipFile(zip_name, mode="x", compression=zipfile.ZIP_LZMA)
 
 			for font in data["fonts"]:
-				font_file = open("/home/franzp/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf", "wb+");
+				font_file = open("/home/franzp/.fonts/" + font["variant"] + "-" + data["paymentNumber"] + ".otf", "wb+");
 				font_bytes = bytearray(font["data"]["data"])
 				font_file.write(font_bytes)
 				zip_to_send.writestr(data["family"] + " " + font["variant"] + ".otf", font_bytes)
