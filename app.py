@@ -60,7 +60,7 @@ class PackageHandler(tornado.web.RequestHandler):
 			self.write(binary_zip.read())
 
 			for font in data["fonts"]:
-				os.remove(home + "/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf");
+				os.remove(home + "/.fonts/" + font["variant"] + "-" + data["paymentNumber"] + ".otf");
 
 			os.remove(zip_name);
 			print("Package created")

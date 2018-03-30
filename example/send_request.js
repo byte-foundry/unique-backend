@@ -38,9 +38,11 @@ const requestPayload = JSON.stringify({
 	customerId: 'cus_CZp0g2lQerSnPH',
 });
 
+console.log(requestPayload);
+
 const options = {
 	hostname: 'localhost',
-	port: 8000,
+	port: 8003,
 	path: '/create-package/',
 	method: 'POST',
 };
