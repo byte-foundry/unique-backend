@@ -18,7 +18,7 @@ class PackageHandler(tornado.web.RequestHandler):
 	def set_default_headers(self):
 		print("setting headers for CORS")
 		unique_origin = ["http://localhost:3000", "https://unique-beta.prototypo.io", "https://unique-dev.prototypo.io", "https://unique.prototypo.io"]
-		origin = self["request"]["headers"]["origin"]
+		origin = self.request.headers["origin"]
 		if origin in unique_origin:
 			self.set_header("Access-Control-Allow-Origin", origin)
 			self.set_header("Access-Control-Allow-Headers", "x-requested-with")
