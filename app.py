@@ -21,7 +21,7 @@ class PackageHandler(tornado.web.RequestHandler):
 		origin = self.request.headers["origin"]
 		if origin in unique_origin:
 			self.set_header("Access-Control-Allow-Origin", origin)
-			self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+			self.set_header("Access-Control-Allow-Headers", "x-requested-with, content-type")
 			self.set_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
 
 	def options(self):
