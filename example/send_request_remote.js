@@ -1,5 +1,5 @@
 const fs = require('fs');
-const http = require('http');
+const https = require('http');
 
 const bold = fs.readFileSync('./Spectral-Bold.ttf');
 const regular = fs.readFileSync('./Spectral-Regular.ttf');
@@ -40,13 +40,13 @@ const requestPayload = JSON.stringify({
 
 const options = {
 	hostname: 'unique-back.prototypo.io',
-	port: 80,
+	port: 443,
 	path: '/create-package/',
 	method: 'POST',
 };
 
-const destFile = fs.createWriteStream('package.zip');
-const req = http.request(options, (res) => {
+const destFile = fs.createWriteStream('package_remote.zip');
+const req = https.request(options, (res) => {
 	res.on('data', (chunk) => {
 		destFile.write(chunk);
 	});

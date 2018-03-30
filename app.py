@@ -1,5 +1,4 @@
 import os
-import pathlib
 import zipfile
 import uuid
 
@@ -16,34 +15,42 @@ class MainHandler(tornado.web.RequestHandler):
 		self.write("Salut")
 
 class PackageHandler(tornado.web.RequestHandler):
+	def set_default_headers(self):
+		print("setting headers for CORS")
+		unique_origin = ["http://localhost:3000", "https://unique-beta.prototypo.io", "https://unique-dev.prototypo.io", "https://unique.prototypo.io"]
+		origin = self["request"]["headers"]["origin"]
+		if origin in unique_origin:
+			self.set_header("Access-Control-Allow-Origin", origin)
+			self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+			self.set_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+
+	def options(self):
+		self.set_status(204)
+		self.finish()
+
 	def post(self):
 		# Get stuff from request (fonts, receipt data, email)
 		# Generate specimen from specimen.html and inject font face
 		# Generate receipt
 		# create zip with everything and send to email
 		data = tornado.escape.json_decode(self.request.body)
-		home = str(pathlib.Path.home())
 
 		if check_stripe_payment(data["paymentNumber"]):
 			zip_name = "tmp/" + str(uuid.uuid4()) + ".zip"
 			zip_to_send = zipfile.ZipFile(zip_name, mode="x", compression=zipfile.ZIP_LZMA)
 
 			for font in data["fonts"]:
-				font_file = open(home + "/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf", "wb+");
+				font_file = open("/home/franzp/.fonts/" + font["variant"] + "-" + data["customerId"] + ".otf", "wb+");
 				font_bytes = bytearray(font["data"]["data"])
 				font_file.write(font_bytes)
 				zip_to_send.writestr(data["family"] + " " + font["variant"] + ".otf", font_bytes)
 				font_file.close()
 
-			choices = data["invoice"]["choices"]
+			html = HTML(filename="specimen.html")
+			css = CSS(string="* { font-family: " + data["family"] + "; font-weight: 100; font-style: italic;}")
+			pdf = html.write_pdf(stylesheets=[css])
 
-			for choice in choices:
-				if choice["name"] == "specimen":
-					html = HTML(filename="specimen.html")
-					css = CSS(string="* { font-family: " + data["family"] + "; font-weight: 100; font-style: italic;}")
-					pdf = html.write_pdf(stylesheets=[css])
-					zip_to_send.writestr("specimen.pdf", pdf)
-
+			zip_to_send.writestr("specimen.pdf", pdf)
 			zip_to_send.close()
 
 			binary_zip = open(zip_name, 'rb')
