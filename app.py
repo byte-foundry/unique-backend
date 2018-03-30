@@ -43,7 +43,7 @@ class PackageHandler(tornado.web.RequestHandler):
 
 			for font in data["fonts"]:
 				font_file = open(home + "/.fonts/" + font["variant"] + "-" + data["paymentNumber"] + ".otf", "wb+");
-				font_bytes = bytearray(font["data"]["data"])
+				font_bytes = bytearray(font["data"])
 				font_file.write(font_bytes)
 				zip_to_send.writestr(data["family"] + " " + font["variant"] + ".otf", font_bytes)
 				font_file.close()
