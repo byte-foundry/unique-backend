@@ -9,7 +9,7 @@ import tornado.web
 
 from weasyprint import HTML, CSS
 
-from check_payment import check_stripe_payment
+from charge_customer import create_stripe_payment
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -37,19 +37,31 @@ class PackageHandler(tornado.web.RequestHandler):
 		data = tornado.escape.json_decode(self.request.body)
 		home = str(Path.home())
 
-		if check_stripe_payment(data["paymentNumber"]):
+		stripe_response = create_stripe_payment(
+			data["source"],
+			data["amount"],
+			data["currency"],
+			data["description"],
+			data["email"]
+		)
+		if "error" in stripe_response:
+			print("Cannot package for payment " + data["paymentNumber"])
+			self.set_status(401)
+			self.set_header("Content-Type", "application/json");
+			self.write({"error": {"reason": "payment failed"}})
+		else:
 			zip_name = "tmp/" + str(uuid.uuid4()) + ".zip"
 			zip_to_send = zipfile.ZipFile(zip_name, mode="x", compression=zipfile.ZIP_DEFLATED)
 
 			for font in data["fonts"]:
-				font_file = open(home + "/.fonts/" + font["variant"] + "-" + data["paymentNumber"] + ".otf", "wb+");
+				font_file = open(home + "/.fonts/" + font["variant"] + "-" + stripe_response.id + ".otf", "wb+");
 				font_bytes = bytearray(font["data"])
 				font_file.write(font_bytes)
 				zip_to_send.writestr(data["family"] + " " + font["variant"] + ".otf", font_bytes)
 				font_file.close()
 
 			html = HTML(filename="specimen.html")
-			css = CSS(string="* { font-family: " + data["family"] + "; font-weight: 100; font-style: italic;}")
+			css = CSS(string="* { font-family: " + data["family"] + ";}")
 			pdf = html.write_pdf(stylesheets=[css])
 
 			zip_to_send.writestr("specimen.pdf", pdf)
@@ -60,15 +72,10 @@ class PackageHandler(tornado.web.RequestHandler):
 			self.write(binary_zip.read())
 
 			for font in data["fonts"]:
-				os.remove(home + "/.fonts/" + font["variant"] + "-" + data["paymentNumber"] + ".otf");
+				os.remove(home + "/.fonts/" + font["variant"] + "-" + stripe_response.id + ".otf");
 
 			os.remove(zip_name);
 			print("Package created")
-		else:
-			print("Cannot package for payment " + data["paymentNumber"])
-			self.set_status(401)
-			self.set_header("Content-Type", "application/json");
-			self.write({"error": {"reason": "payment failed"}})
 
 def make_app():
 	settings = {
