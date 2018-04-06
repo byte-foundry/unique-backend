@@ -91,5 +91,9 @@ if __name__ == "__main__":
 	app = make_app()
 	print("App Launched")
 
-app.listen(8003)
+port = 8003
+if "PYTHON_ENV" in os.environ:
+	print("App Launched")
+	port = 8004
+app.listen(port)
 tornado.ioloop.IOLoop.current().start()
