@@ -6,10 +6,14 @@ from pathlib import Path
 import tornado.ioloop
 import tornado.escape
 import tornado.web
+import tornado.httpclient
 
 from weasyprint import HTML, CSS
 
 from charge_customer import create_stripe_payment
+
+coupon_url = os.environ["UNIQUE_COUPON_URL"]
+http_client = tornado.httpclient.HTTPClient()
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -36,6 +40,16 @@ class PackageHandler(tornado.web.RequestHandler):
 		# create zip with everything and send to email
 		data = tornado.escape.json_decode(self.request.body)
 		home = str(Path.home())
+
+		if 'coupon' in data:
+			try:
+				response = http_client.fetch(coupon_url + data["coupon"])
+				coupon_data = tornado.escape.json_decode(response.body)
+				print(str(coupon_data))
+			except tornado.httpclient.HTTPError as e:
+				print(str(e))
+			except Exception as e:
+				print(str(e))
 
 		stripe_response = create_stripe_payment(
 			data["source"],
