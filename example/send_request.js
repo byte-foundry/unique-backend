@@ -10,15 +10,15 @@ const requestPayload = JSON.stringify({
 	fonts: [
 		{
 			variant: 'bold',
-			data: bold,
+			data: bold.toJSON().data,
 		},
 		{
 			variant: 'regular',
-			data: regular,
+			data: regular.toJSON().data,
 		},
 		{
 			variant: 'extra light italic',
-			data: extraLightItalic,
+			data: extraLightItalic.toJSON().data,
 		},
 	],
 	invoice: {
@@ -45,6 +45,9 @@ const options = {
 	port: 8003,
 	path: '/create-package/',
 	method: 'POST',
+	headers: {
+		origin: 'http://localhost:3000',
+	},
 };
 
 const destFile = fs.createWriteStream('package.zip');

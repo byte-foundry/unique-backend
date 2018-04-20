@@ -1,5 +1,5 @@
 const fs = require('fs');
-const https = require('http');
+const https = require('https');
 
 const bold = fs.readFileSync('./Spectral-Bold.ttf');
 const regular = fs.readFileSync('./Spectral-Regular.ttf');
@@ -10,15 +10,15 @@ const requestPayload = JSON.stringify({
 	fonts: [
 		{
 			variant: 'bold',
-			data: bold,
+			data: bold.toJSON().data,
 		},
 		{
 			variant: 'regular',
-			data: regular,
+			data: regular.toJSON().data,
 		},
 		{
 			variant: 'extra light italic',
-			data: extraLightItalic,
+			data: extraLightItalic.toJSON().data,
 		},
 	],
 	invoice: {
@@ -43,11 +43,15 @@ const options = {
 	port: 443,
 	path: '/create-package/',
 	method: 'POST',
+	headers: {
+		origin: 'http://localhost:3000',
+	},
 };
 
 const destFile = fs.createWriteStream('package_remote.zip');
 const req = https.request(options, (res) => {
 	res.on('data', (chunk) => {
+		console.log(chunk);
 		destFile.write(chunk);
 	});
 	res.on('end', () => {
