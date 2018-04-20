@@ -40,12 +40,14 @@ class PackageHandler(tornado.web.RequestHandler):
 		# create zip with everything and send to email
 		data = tornado.escape.json_decode(self.request.body)
 		home = str(Path.home())
+		amount = data["amount"]
 
-		if 'coupon' in data:
+		if "coupon" in data:
 			try:
 				response = http_client.fetch(coupon_url + data["coupon"])
 				coupon_data = tornado.escape.json_decode(response.body)
-				print(str(coupon_data))
+				percent_off = coupon_data["percentOff"]
+				amount = int(amount - (amount * percent_off / 100))
 			except tornado.httpclient.HTTPError as e:
 				print(str(e))
 			except Exception as e:
@@ -53,7 +55,7 @@ class PackageHandler(tornado.web.RequestHandler):
 
 		stripe_response = create_stripe_payment(
 			data["source"],
-			data["amount"],
+			amount,
 			data["currency"],
 			data["description"],
 			data["email"]
