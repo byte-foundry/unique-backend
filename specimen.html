@@ -16,12 +16,15 @@
 				margin: 0.5cm;
 			}
 
+			.page {
+				font-family: serif;
+			}
+
 			.header {
 				width:19cm;
 				position: fixed;
 				top: 0.5cm;
 				left: 0.5cm;
-				font-family: sans-serif;
 			}
 
 			.footer {
@@ -30,14 +33,24 @@
 				bottom: 0.5cm;
 				left: 0.5cm;
 				border-top: solid 1px #333;
-				font-family: sans-serif;
+			}
+
+			.unique-font {
+				font-family: "Unique", sans-serif;
 			}
 
 			.page {
 				page-break-after: always;
-				height: 28cm;
+				height: 27cm;
 				padding-top: 2cm;
 				padding-bottom: 2cm;
+				position: relative;
+			}
+
+			.page-bottom {
+				position:absolute;
+				bottom: 0px;
+				margin-bottom: 3.5cm;
 			}
 
 			.fullscreen-spread {
@@ -45,7 +58,6 @@
 				height: 23.5cm;
 				margin-top: 2cm;
 				background: #5320ee;
-				padding-left: 40px;
 				font-size: 400px;
 				color: #fefefe;
 				position:relative;
@@ -68,42 +80,147 @@
 				top: 10px;
 				position:absolute;
 				color: #5320ee;
+				margin-right: 0.5cm;
 			}
 
 			.display-word {
 				margin-top: 20px;
 				margin-bottom: 20px;
+				margin-left: 1cm;
+				clear: both;
+			}
+
+			.display-word-with-margin {
+				margin-right: 2.5cm;
+				max-height:5.5cm;
+				overflow: hidden;
+			}
+
+			.background-and-size {
+				position: relative;
+			}
+
+			.center {
+				text-align: center;
+			}
+
+			.spread {
+				width: 16.5cm;
+				margin-right: 3cm;
+				background: #5320ee;
+				color: #fefefe;
+			}
+
+			.column {
+				margin-left: 10px;
+			}
+
+			.half {
+				padding-left: 10px;
+				width: 48%;
+				display: inline-block;
+			}
+
+			.one-quarter {
+				padding-left: 10px;
+				width: 23%;
+				display: inline-block;
+			}
+			.three-quarter {
+				padding-left: 10px;
+				width: 73%;
+				display: inline-block;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="header">
+		<div class="header unique-font">
 			<div style="float: left">Specimen</div>
 			<div style="float: right">Standard Set</div>
 		</div>
-		<div class="footer">
+		<div class="footer unique-font">
 			<div style="float: left">unique.prototypo.io</div>
 			<div style="float: right">Unique by Prototypo</div>
 		</div>
 		<div class="page">
-			<div class="fullscreen-spread"><div class="fullscreen-spread-text">Aa</div></div>
+			<div class="fullscreen-spread"><div class="fullscreen-spread-text cus-font">Aa</div></div>
 		</div>
 		<div class="page">
 			<div class="display-by-pt">
-				<div class="pt-number">200 pts</div>
-				<div class="display-word" style="font-size:200px">VIEWING</div>
+				<div class="pt-number unique-font">200 pts</div>
+				<div class="display-word cus-font" style="font-size:200px">VIEWING</div>
 			</div>
 			<div class="display-by-pt">
-				<div class="pt-number">150 pts</div>
-				<div class="display-word" style="font-size:150px">Num&eacute;a</div>
+				<div class="pt-number unique-font">150 pts</div>
+				<div class="display-word cus-font" style="font-size:150px">Num&eacute;a</div>
 			</div>
 			<div class="display-by-pt">
-				<div class="pt-number">110 pts</div>
-				<div class="display-word" style="font-size:110px">Coghannos</div>
+				<div class="pt-number unique-font">110 pts</div>
+				<div class="display-word cus-font" style="font-size:110px">Coghannos</div>
 			</div>
 			<div class="display-by-pt">
-				<div class="pt-number">80 pts</div>
-				<div class="display-word" style="font-size:80px">Reminder</div>
+				<div class="pt-number unique-font">80 pts</div>
+				<div class="display-word cus-font" style="font-size:80px">Reminder</div>
+			</div>
+		</div>
+		<div class="page">
+			<div class="page-bottom">
+				<div class="display-by-pt">
+					<div class="pt-number unique-font">60 pts</div>
+					<div class="center spread cus-font" style="font-size:60px">CASTAWAY<br/>ON<br/>THE MOON</div>
+				</div>
+				<div class="display-by-pt">
+					<div class="pt-number unique-font">260 pts</div>
+					<div class="center spread cus-font" style="font-size:260px">nice<br/>easy</div>
+				</div>
+			</div>
+		</div>
+		<div class="page">
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">40 pts</div>
+				<div class="display-word cus-font display-word-with-margin" style="font-size:40px">Xerum aribust quiam volorione nullestorem faciend igenectet et laccate volenim inctatio tem dolGiam lab In nonsedi rerro imporep elestem. Ipsandi orerspiet, ut ullaborepe pla comniae et ut ad eosam, nobit fugitatem ut omniassita porehenieni unt, eos si ab idic tem. Et lant. Us et et veliquo ducille cearia nulluptaest, eaquo illaborpos et </div>
+			</div>
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">20 pts</div>
+				<div class="display-word cus-font display-word-with-margin" style="font-size:20px">Xerum aribust quiam volorione nullestorem faciend igenectet et laccate volenim inctatio tem dolGiam lab In nonsedi rerro imporep elestem. Ipsandi orerspiet, ut ullaborepe pla comniae et ut ad eosam, nobit fugitatem ut omniassita porehenieni unt, eos si ab idic tem. Et lant. Us et et veliquo ducille cearia nulluptaest, eaquo illaborpos et </div>
+			</div>
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">14 pts</div>
+				<div class="display-word cus-font display-word-with-margin" style="font-size:14px">Ex ex erum aut in et, corrum quame dolo moluptum faccaest, officiminvel ipit ea vento dolorionse solescil int labo. Nam idebitat illupta sperum aciatet magnimp orepudam, et earibeatus dolorem. Uga. Adi ullaut accum autem fuga. Ur, id ute sed quis sit officae remposae. Ut exceaquo blantium eos et as natus inciate mporum sa ipsundis dendaerovit, sequi te audae. Optae del inus veliquid ut autatur sed qui conecatem re, qui incto di non nate omnis ab ium quis arcitin nescimus et as </div>
+			</div>
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">12 pts</div>
+				<div class="display-word cus-font display-word-with-margin" style="font-size:12px">Ficimint. Am il invendam fuga. Hendandae nulpa comnis et aut es adit lictur? Optas demped mi, in cusandit que con conseni aut que lacipici as ut autem quam, simos molupta susam ium, eume conecus cimusapicid mo invelibusda volore, volores cienim aut atur si si bea quam sum des et faccab illant undit moloressunt andendi stectiam, veribus, sum, et exeratibea parum sunt, sitas eum accum, ut dit por sus magnatiam, ommod exerum faccaera pressunt eatur? Cepe non cum utem qui ipsum de nest eribus nos molest, ut ommo excessit verchil lessendicim voluptate.</div>
+			</div>
+		</div>
+		<div class="page">
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">10 pts</div>
+				<div class="display-word cus-font display-word-with-margin column" style="font-size:10px">
+					<div class="half">Nimos eiur? Qui odis dolupta sperum, to eumquae quodis dolupta ecabor auta sum as dolles aspicia ped molore, omnienis eost idem fugiat liquissit eos quo maio. Ihit, ut offic tem sedigna mendit a veri oditias piciist, arios quam sit latur sequi aspelibus. Ullorum eataspedi dolut quiscil lestis nam res ad exped quod et mint. Ucia nit aborat harundent et accum raeptamet prae eaquisit, qui demo voloraecto quodi occus ad mos a dest pro occaepeliqui non excessites estionserum faccus. Os doluptatin nissequides prepeli ciassed mi, voles con eveles voluptat. Aquam sequaepra ditatur? Adit, ea nis denes aut ipitio int faciti ommolup taecab iusae nis dendant in et volorepe cullis id ea quis nos et est pedigen daeceaquide accae sit eum ipiet explaborem aspere veliquibus asimili gnatent ut il ilisque volendes et rerferestis evelend ignitasitati anda si derum,</div>
+					<div class="half">odignatem quam de ium audaerum fugitas resto dolupta ipid ut eum quae expelic turior audae res aut aut aut et pero comnitiam exerum ut latet eostem remos eum rent. Utatusciam ullaborem que nis non nam que cus suntis delibus aecate eribus qui dunt mo officimuscid magnist, odit, conem ut hillant ex et plantis moditistio doluptate vellati vendam ipicia site officate excea ni de nis et qui blam, ium, si sinctium assit rem quae quiaspe volorporesti debitas deni cor maios etur, coreper feribus, sus is reic tectiun daeperit, consequam ratquae maximus, sus assum ut ad unto que peditatius maioribus nus delesto qui ut Ario mil intis aut illorerem non raes cuptum reperum vendero reiumen digendae vendebitae porerum acepe officaecum quam aut dolut et Xerorror acia cum cor re quo toris et volor as et verum autemo tescipi ditaturepudi coriore re simpos atia dit lanis</div>
+				</div>
+			</div>
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">8 pts</div>
+				<div class="display-word cus-font display-word-with-margin column" style="font-size:8px">
+					<div class="half">Picimagn atatisquis conserrum rehentur? Ehent opta vende dolorem ut volupta tectur molum quam, totat. Oluptatia senihitias es atias quatusa que nam exernate eum fugiat oditia doluptati dolum nus quis quam nobit volupta voluptatiam laborepero dolupta spernam hillupt assimil eic tectin eum iducillor siti blatas il id estiorem. Nequat rendioruntia quiatumquas molor moluptatios andita isque sim la veris molor min rerum res as deri aut etur aceat ullora nonet aliquod quae entior ma sed ut repudaeped quas molorestiur sam ni debit occae porpor sit quam ea ad que evendis dolupta necepudit occusam alicim inctium ipitatur, omnihiliqui in et quaecatum as sum quat offic te nobis apiciis di dolum aut ut la dolles nient voluptatem reperum, que dolorumqui niscitatur similit exereptatur aut optatet lab ipis volor aut ex eaqui officae et quam, si volores debit aut asped mi, quam earchit aquunt, officidem essequi aepelitiae. Di con raeperi aeptatio te cus minimen tinimol uptatest quo </div>
+					<div class="half">voluptatem et eum facepud ionsequi sus moluptaquati remporesto moditassit aut rercima gnimet acest atisit volor ad explisi as sit qui blaboritas sunducimus qui que sus aut volupta temped mo corpore molendae doloreribus aciliquiatas molore pa volum consequi tet volorem core pedipis ma evelis ditia volori qui dolorporpor aceperum qui tem eaqui in non con cumquat eossumque non eumqui dolestis volesti officiis ut opta voluptam facitatur, ut et que cone debit quamet fugitae ptatem fuga. Ut volliquis amus mos rem cum volupidusa conet velest, ulla adicia si blatescia sum quas et que simpe nobit parumque nonserum sequo voloria iliquatatis aut a plitiam, vendictum fuga. Elent ad mos apit adi omnita delesent eatur, volenias voluptio tem. Beate sapero mil mod que nulparum, el ilition sendaer iberia volorum quiassiminis re laboribus sant. Magnati sequodi tiamus qui ullitis am voluptate volleces magnimagnim et qui doles aut et re est, tetur as doluptibusam illit quiatis quis eum nobitiam, que volorrovi</div>
+				</div>
+			</div>
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">14 pts<br/>&<br/>7pts</div>
+				<div class="display-word cus-font display-word-with-margin column">
+					<div class="three-quarter" style="font-size:14px">Picimagn atatisquis conserrum rehentur? Ehent opta vende dolorem ut volupta tectur molum quam, totat. Oluptatia senihitias es atias quatusa que nam exernate eum fugiat oditia doluptati dolum nus quis quam nobit volupta voluptatiam laborepero dolupta spernam hillupt assimil eic tectin eum iducillor siti blatas il id estiorem. Nequat rendioruntia quiatumquas molor moluptatios andita isque sim la veris molor min rerum res as deri aut etur aceat ullora nonet aliquod quae entior ma sed ut repudaeped quas molorestiur sam ni debit occae porpor sit quam ea ad que evendis dolupta necepudit occusam alicim inctium ipitatur, omnihiliqui in et quaecatum as sum quat offic te nobis apiciis di dolum aut ut la dolles nient voluptatem reperum, que dolorumqui niscitatur similit exereptatur aut optatet lab ipis volor aut ex eaqui officae et quam, si volores debit aut asped mi, quam earchit aquunt, officidem essequi aepelitiae. Di con raeperi aeptatio te cus minimen tinimol uptatest quo </div>
+					<div class="one-quarter" style="font-size:7px;vertical-align:top;">voluptatem et eum facepud ionsequi sus moluptaquati remporesto moditassit aut rercima gnimet acest atisit volor ad explisi as sit qui blaboritas sunducimus qui que sus aut volupta temped mo corpore molendae doloreribus aciliquiatas molore pa volum consequi tet volorem core pedipis ma evelis ditia volori qui dolorporpor aceperum qui tem eaqui in non con cumquat eossumque non eumqui dolestis volesti officiis ut opta voluptam facitatur, ut et que cone debit quamet fugitae ptatem fuga. Ut volliquis amus mos rem cum volupidusa conet velest, ulla adicia si blatescia sum quas et que simpe nobit parumque nonserum sequo voloria iliquatatis aut a plitiam, vendictum fuga. Elent ad mos apit adi omnita delesent eatur, volenias voluptio tem. Beate sapero mil mod que nulparum, el ilition sendaer iberia volorum quiassiminis re laboribus sant. Magnati sequodi tiamus qui ullitis am voluptate volleces magnimagnim et qui doles aut et re est, tetur as doluptibusam illit quiatis quis eum nobitiam, que volorrovi</div>
+				</div>
+			</div>
+			<div class="display-by-pt">
+				<div class="pt-number unique-font">12 pts<br/>&<br/>6pts</div>
+				<div class="display-word cus-font display-word-with-margin column">
+					<div class="three-quarter" style="font-size:12px">Picimagn atatisquis conserrum rehentur? Ehent opta vende dolorem ut volupta tectur molum quam, totat. Oluptatia senihitias es atias quatusa que nam exernate eum fugiat oditia doluptati dolum nus quis quam nobit volupta voluptatiam laborepero dolupta spernam hillupt assimil eic tectin eum iducillor siti blatas il id estiorem. Nequat rendioruntia quiatumquas molor moluptatios andita isque sim la veris molor min rerum res as deri aut etur aceat ullora nonet aliquod quae entior ma sed ut repudaeped quas molorestiur sam ni debit occae porpor sit quam ea ad que evendis dolupta necepudit occusam alicim inctium ipitatur, omnihiliqui in et quaecatum as sum quat offic te nobis apiciis di dolum aut ut la dolles nient voluptatem reperum, que dolorumqui niscitatur similit exereptatur aut optatet lab ipis volor aut ex eaqui officae et quam, si volores debit aut asped mi, quam earchit aquunt, officidem essequi aepelitiae. Di con raeperi aeptatio te cus minimen tinimol uptatest quo </div>
+					<div class="one-quarter" style="font-size:6px; vertical-align:top;">voluptatem et eum facepud ionsequi sus moluptaquati remporesto moditassit aut rercima gnimet acest atisit volor ad explisi as sit qui blaboritas sunducimus qui que sus aut volupta temped mo corpore molendae doloreribus aciliquiatas molore pa volum consequi tet volorem core pedipis ma evelis ditia volori qui dolorporpor aceperum qui tem eaqui in non con cumquat eossumque non eumqui dolestis volesti officiis ut opta voluptam facitatur, ut et que cone debit quamet fugitae ptatem fuga. Ut volliquis amus mos rem cum volupidusa conet velest, ulla adicia si blatescia sum quas et que simpe nobit parumque nonserum sequo voloria iliquatatis aut a plitiam, vendictum fuga. Elent ad mos apit adi omnita delesent eatur, volenias voluptio tem. Beate sapero mil mod que nulparum, el ilition sendaer iberia volorum quiassiminis re laboribus sant. Magnati sequodi tiamus qui ullitis am voluptate volleces magnimagnim et qui doles aut et re est, tetur as doluptibusam illit quiatis quis eum nobitiam, que volorrovi</div>
+				</div>
 			</div>
 		</div>
 	</body>
