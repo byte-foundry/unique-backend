@@ -2,6 +2,8 @@ import os
 import zipfile
 import uuid
 import smtplib
+import time
+import base64
 from pathlib import Path
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -21,6 +23,8 @@ coupon_url = os.environ["UNIQUE_COUPON_URL"]
 http_client = tornado.httpclient.HTTPClient()
 email_password = os.environ["UNIQUE_EMAIL_PASSWORD"]
 email_login = os.environ["UNIQUE_EMAIL_LOGIN"]
+
+upload_url = "https://tc1b6vq6o8.execute-api.eu-west-1.amazonaws.com/dev/unique/projects/{0}/uploads"
 
 def send_customer_email(zip_file, email, family_name):
 	server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -90,6 +94,21 @@ def create_zip_and_send(zip_id, home, data):
 
 		return result
 
+def upload_to_s3(bytes_to_upload, project_id):
+	formatted_url = upload_url.format(project_id)
+	base64_payload = base64.b64encode(bytes_to_upload)
+	print(project_id)
+	print(formatted_url)
+	print(base64_payload)
+	s3_request = tornado.httpclient.HTTPRequest(
+			formatted_url,
+			method="POST",
+			body=base64_payload,
+			headers={"Content-type": "application/json"}
+			)
+	response = http_client.fetch(s3_request)
+	print(str(response.body))
+
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.write("Salut")
@@ -149,6 +168,7 @@ class PackageHandler(tornado.web.RequestHandler):
 				self.write({"error": {"reason": "payment failed"}})
 			else:
 				binary_zip = create_zip_and_send(stripe_response.id, home, data)
+				upload_to_s3(binary_zip, data["projectId"])
 				self.write(binary_zip)
 
 def make_app():
