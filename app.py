@@ -97,9 +97,6 @@ def create_zip_and_send(zip_id, home, data):
 def upload_to_s3(bytes_to_upload, project_id):
 	formatted_url = upload_url.format(project_id)
 	base64_payload = base64.b64encode(bytes_to_upload)
-	print(project_id)
-	print(formatted_url)
-	print(base64_payload)
 	s3_request = tornado.httpclient.HTTPRequest(
 			formatted_url,
 			method="POST",
@@ -107,7 +104,6 @@ def upload_to_s3(bytes_to_upload, project_id):
 			headers={"Content-type": "application/json"}
 			)
 	response = http_client.fetch(s3_request)
-	print(str(response.body))
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -146,9 +142,9 @@ class PackageHandler(tornado.web.RequestHandler):
 				if percent_off == 100:
 					free = True
 			except tornado.httpclient.HTTPError as e:
-				print(str(e))
+				print("HTTPError while retrieveng coupon" + str(e.response.body))
 			except Exception as e:
-				print(str(e))
+				print("Unknown error while retrieveng coupon" + str(e))
 
 		if free:
 			binary_zip = create_zip_and_send(str(uuid.uuid4()), home, data)
@@ -168,7 +164,19 @@ class PackageHandler(tornado.web.RequestHandler):
 				self.write({"error": {"reason": "payment failed"}})
 			else:
 				binary_zip = create_zip_and_send(stripe_response.id, home, data)
-				upload_to_s3(binary_zip, data["projectId"])
+				try:
+					upload_to_s3(binary_zip, data["projectId"])
+				except tornado.httpclient.HTTPError as e:
+					print("HTTPError while while uploading to s3: " + str(e.response.body))
+					self.set_status(e.code)
+					self.set_header("Content-Type", "application/json");
+					self.write(e.response.body)
+					return
+				except Exception as e:
+					print("Unknown error while uploading to s3: " + str(e))
+					self.set_status(500)
+					self.write(str(e))
+					return
 				self.write(binary_zip)
 
 def make_app():
