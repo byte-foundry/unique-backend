@@ -18,13 +18,18 @@ import tornado.httpclient
 from weasyprint import HTML, CSS
 
 from charge_customer import create_stripe_payment
+from email_html import get_html_email
 
 coupon_url = os.environ["UNIQUE_COUPON_URL"]
 http_client = tornado.httpclient.HTTPClient()
 email_password = os.environ["UNIQUE_EMAIL_PASSWORD"]
 email_login = os.environ["UNIQUE_EMAIL_LOGIN"]
 
-upload_url = "https://tc1b6vq6o8.execute-api.eu-west-1.amazonaws.com/dev/unique/projects/{0}/uploads"
+if "PYTHON_ENV" in os.environ:
+	upload_url = "https://tc1b6vq6o8.execute-api.eu-west-1.amazonaws.com/dev/unique/projects/{0}/uploads"
+else:
+	upload_url = "https://tc1b6vq6o8.execute-api.eu-west-1.amazonaws.com/dev/unique/projects/{0}/uploads"
+
 
 def send_customer_email(zip_file, email, family_name):
 	server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -36,14 +41,16 @@ def send_customer_email(zip_file, email, family_name):
 	msg['To'] = email
 	msg['Subject'] = "Your unique font!"
 
-	msg.attach(MIMEText('''Congratulations!
+	msg.attach(MIMEText('''Hi!
+Yay, you made it, you’ve created a brand new font ready to use in all your projects! We’re so proud of you.
+For your reference, we’ve attached your invoice and your fonts in this email.
 
-You just purchase your unique font.
+In case you’ll be back to create an account or visit your Unique font library, we will store your font and look after it for you.
 
-I've taken the liberty to attach your package to this email.
-If you signed up to Unique you'll be able to download your package later from your library.
+Feel free to spread the word and tell your friends about us! :)
 
-Have a good one!''', 'plain'))
+Eager to make your next font? Let’s go!''', 'plain'))
+	msg.attach(MIMEText(get_html_email(), 'html'))
 	file_to_attach = open(zip_file, "rb")
 
 	attachment = MIMEBase("application", "octet-stream")
