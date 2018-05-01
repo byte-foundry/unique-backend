@@ -36,7 +36,7 @@ def send_customer_email(zip_file, email, family_name):
 	server.starttls()
 	server.login(email_login, email_password)
 
-	msg = MIMEMultipart()
+	msg = MIMEMultipart("alternative")
 	msg['From'] = email_login
 	msg['To'] = email
 	msg['Subject'] = "Your unique font!"
