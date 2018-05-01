@@ -28,7 +28,7 @@ email_login = os.environ["UNIQUE_EMAIL_LOGIN"]
 if "PYTHON_ENV" in os.environ:
 	upload_url = "https://tc1b6vq6o8.execute-api.eu-west-1.amazonaws.com/dev/unique/projects/{0}/uploads"
 else:
-	upload_url = "https://tc1b6vq6o8.execute-api.eu-west-1.amazonaws.com/dev/unique/projects/{0}/uploads"
+	upload_url = "https://e4jpj60rk8.execute-api.eu-west-1.amazonaws.com/prod/unique/projects/{0}/uploads"
 
 
 def send_customer_email(zip_file, email, family_name):
