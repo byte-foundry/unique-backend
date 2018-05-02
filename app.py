@@ -4,6 +4,7 @@ import uuid
 import smtplib
 import time
 import base64
+from datetime import datetime
 from pathlib import Path
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -95,9 +96,11 @@ def create_zip_and_send(zip_id, home, data):
 			os.remove(home + "/.fonts/" + font["variant"] + "-" + zip_id + ".otf");
 
 		binary_zip.close()
-		os.remove(zip_name);
+		os.remove(zip_name)
 
-		print("Package created")
+		now_date = datetime.now()
+
+		print("[{0}] Package created for {1}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"]))
 
 		return result
 
@@ -110,6 +113,8 @@ def upload_to_s3(bytes_to_upload, project_id):
 			body=base64_payload,
 			headers={"Content-type": "application/json"}
 			)
+	now_date = datetime.now()
+	print("[{0}] Package uploaded with id {1}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), project_id))
 	response = http_client.fetch(s3_request)
 
 class MainHandler(tornado.web.RequestHandler):
@@ -118,7 +123,6 @@ class MainHandler(tornado.web.RequestHandler):
 
 class PackageHandler(tornado.web.RequestHandler):
 	def set_default_headers(self):
-		print("setting headers for CORS")
 		unique_origin = ["http://localhost:3000", "https://unique-beta.prototypo.io", "https://unique-dev.prototypo.io", "https://unique.prototypo.io"]
 		origin = self.request.headers["origin"]
 		if origin in unique_origin:
@@ -157,12 +161,15 @@ class PackageHandler(tornado.web.RequestHandler):
 			binary_zip = create_zip_and_send(str(uuid.uuid4()), home, data)
 			self.write(binary_zip)
 		else:
+			now_date = datetime.now()
+			print("[{0}] Charging {1} for {2}{3}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"], amount, data["currency"]))
 			stripe_response = create_stripe_payment(
 				data["source"],
 				amount,
 				data["currency"],
 				data["description"],
-				data["email"]
+				data["email"],
+				data["family"]
 			)
 			if "error" in stripe_response:
 				print("Cannot package for payment " + data["paymentNumber"])
@@ -170,6 +177,7 @@ class PackageHandler(tornado.web.RequestHandler):
 				self.set_header("Content-Type", "application/json");
 				self.write({"error": {"reason": "payment failed"}})
 			else:
+				print("[{0}] Charged succesfully {1} for {2}{3}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"], amount, data["currency"]))
 				binary_zip = create_zip_and_send(stripe_response.id, home, data)
 				try:
 					upload_to_s3(binary_zip, data["projectId"])
@@ -198,7 +206,6 @@ def make_app():
 
 if __name__ == "__main__":
 	app = make_app()
-	print("App Launched")
 
 port = 8003
 if "PYTHON_ENV" in os.environ:
