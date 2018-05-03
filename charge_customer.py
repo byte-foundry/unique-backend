@@ -36,7 +36,7 @@ def send_error_msg_and_print(subject, e, email):
 
 
 def create_stripe_payment(token, amount, currency, description, email, family, coupon):
-	metadata = {unique: True}
+	metadata = {"unique": True}
 	if coupon is not False:
 		metadata["coupon"] = coupon
 	try:
