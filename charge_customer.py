@@ -35,13 +35,17 @@ def send_error_msg_and_print(subject, e, email):
 	print(error_msg, stacktrace)
 
 
-def create_stripe_payment(token, amount, currency, description, email, family):
+def create_stripe_payment(token, amount, currency, description, email, family, coupon):
 	try:
 		charge = stripe.Charge.create(
 			amount=amount,
 			currency=currency,
 			source=token,
-			description='Unique font "{0}"'.format(family)
+			description='Unique font "{0}"'.format(family),
+			metadata={
+				"coupon": coupon,
+				"unique": True,
+			}
 		)
 		if charge.status is "succeeded" or charge.paid:
 			return charge

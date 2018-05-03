@@ -169,7 +169,8 @@ class PackageHandler(tornado.web.RequestHandler):
 				data["currency"],
 				data["description"],
 				data["email"],
-				data["family"]
+				data["family"],
+				data["coupon"]
 			)
 			if "error" in stripe_response:
 				print("Cannot package for payment " + data["paymentNumber"])
