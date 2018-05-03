@@ -143,10 +143,12 @@ class PackageHandler(tornado.web.RequestHandler):
 		home = str(Path.home())
 		amount = data["amount"]
 		free = False
+		coupon = False
 
 		if "coupon" in data:
+			coupon = data["coupon"]
 			try:
-				response = http_client.fetch(coupon_url + data["coupon"])
+				response = http_client.fetch(coupon_url + coupon)
 				coupon_data = tornado.escape.json_decode(response.body)
 				percent_off = coupon_data["percentOff"]
 				amount = int(amount - (amount * percent_off / 100))
@@ -170,7 +172,7 @@ class PackageHandler(tornado.web.RequestHandler):
 				data["description"],
 				data["email"],
 				data["family"],
-				data["coupon"]
+				coupon
 			)
 			if "error" in stripe_response:
 				print("Cannot package for payment " + data["paymentNumber"])
