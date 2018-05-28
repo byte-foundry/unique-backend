@@ -105,9 +105,9 @@ def create_zip_and_send(zip_id, home, data):
 	now_date = datetime.now()
 
 	if "email" in data:
-		print("[{0}] Package created for {1}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"]))
+		print("Package created for {0}".format(data["email"]))
 	else:
-		print("[{0}] Package created with coupon 100%".format(now_date.strftime("%d/%m/%Y %I:%M%p")))
+		print("Package created with coupon 100%".format())
 
 	return result
 
@@ -121,7 +121,7 @@ def upload_to_s3(bytes_to_upload, project_id):
 			headers={"Content-type": "application/json"}
 			)
 	now_date = datetime.now()
-	print("[{0}] Package uploaded with id {1}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), project_id))
+	print("Package uploaded with id {0}".format(project_id))
 	response = http_client.fetch(s3_request)
 
 def use_unique_coupon(coupon):
@@ -142,7 +142,7 @@ def use_unique_coupon(coupon):
 			headers={"Content-type": "application/json"}
 			)
 	now_date = datetime.now()
-	print("[{0}] Used coupon {1}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), coupon))
+	print("Used coupon {0}".format(coupon))
 	response = http_client.fetch(coupon_request)
 
 class MainHandler(tornado.web.RequestHandler):
@@ -194,7 +194,7 @@ class PackageHandler(tornado.web.RequestHandler):
 			self.write(binary_zip)
 		else:
 			now_date = datetime.now()
-			print("[{0}] Charging {1} for {2}{3}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"], amount, data["currency"]))
+			print("Charging {0} for {1}{2}".format(data["email"], amount, data["currency"]))
 			stripe_response = create_stripe_payment(
 					data["source"],
 					amount,
@@ -210,7 +210,7 @@ class PackageHandler(tornado.web.RequestHandler):
 				self.set_header("Content-Type", "application/json");
 				self.write({"error": {"reason": "payment failed"}})
 			else:
-				print("[{0}] Charged succesfully {1} for {2}{3}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"], amount, data["currency"]))
+				print("Charged succesfully {0} for {1}{2}".format(data["email"], amount, data["currency"]))
 				binary_zip = create_zip_and_send(stripe_response.id, home, data)
 				try:
 					upload_to_s3(binary_zip, data["projectId"])
