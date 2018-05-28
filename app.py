@@ -31,6 +31,10 @@ if "PYTHON_ENV" in os.environ:
 else:
 	upload_url = "https://e4jpj60rk8.execute-api.eu-west-1.amazonaws.com/prod/unique/projects/{0}/uploads"
 
+if "PYTHON_ENV" in os.environ:
+	coupon_use_url = "https://tc1b6vq6o8.execute-api.eu-west-1.amazonaws.com/dev/webhooks/unique/couponRedeemed"
+else:
+	coupon_use_url = "https://e4jpj60rk8.execute-api.eu-west-1.amazonaws.com/prod/webhooks/unique/couponRedeemed"
 
 def send_customer_email(zip_file, email, family_name):
 	server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -81,28 +85,31 @@ def create_zip(zip_name, zip_id, home, family, fonts):
 	zip_to_send.close()
 
 def create_zip_and_send(zip_id, home, data):
-		zip_name = "tmp/" + str(uuid.uuid4()) + ".zip"
+	zip_name = "tmp/" + str(uuid.uuid4()) + ".zip"
 
-		create_zip(zip_name, zip_id, home, data["family"], data["fonts"])
+	create_zip(zip_name, zip_id, home, data["family"], data["fonts"])
 
-		binary_zip = open(zip_name, 'rb')
+	binary_zip = open(zip_name, 'rb')
 
-		if "email" in data:
-			send_customer_email(zip_name, data["email"], data["family"])
+	if "email" in data:
+		send_customer_email(zip_name, data["email"], data["family"])
 
-		result = binary_zip.read()
+	result = binary_zip.read()
 
-		for font in data["fonts"]:
-			os.remove(home + "/.fonts/" + font["variant"] + "-" + zip_id + ".otf");
+	for font in data["fonts"]:
+		os.remove(home + "/.fonts/" + font["variant"] + "-" + zip_id + ".otf");
 
-		binary_zip.close()
-		os.remove(zip_name)
+	binary_zip.close()
+	os.remove(zip_name)
 
-		now_date = datetime.now()
+	now_date = datetime.now()
 
-		print("[{0}] Package created for {1}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"]))
+	if "email" in data:
+		print("Package created for {0}".format(data["email"]))
+	else:
+		print("Package created with coupon 100%".format())
 
-		return result
+	return result
 
 def upload_to_s3(bytes_to_upload, project_id):
 	formatted_url = upload_url.format(project_id)
@@ -114,8 +121,29 @@ def upload_to_s3(bytes_to_upload, project_id):
 			headers={"Content-type": "application/json"}
 			)
 	now_date = datetime.now()
-	print("[{0}] Package uploaded with id {1}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), project_id))
+	print("Package uploaded with id {0}".format(project_id))
 	response = http_client.fetch(s3_request)
+
+def use_unique_coupon(coupon):
+	coupon_request = tornado.httpclient.HTTPRequest(
+			coupon_use_url,
+			method="POST",
+			body=tornado.escape.json_encode({
+				"type": "charge.succeeded",
+				"data": {
+					"object": {
+						"metadata": {
+							"unique": "true",
+							"coupon": coupon
+							}
+						}
+					}
+				}),
+			headers={"Content-type": "application/json"}
+			)
+	now_date = datetime.now()
+	print("Used coupon {0}".format(coupon))
+	response = http_client.fetch(coupon_request)
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -143,10 +171,13 @@ class PackageHandler(tornado.web.RequestHandler):
 		home = str(Path.home())
 		amount = data["amount"]
 		free = False
+		coupon = False
 
 		if "coupon" in data:
+			coupon = data["coupon"]
 			try:
-				response = http_client.fetch(coupon_url + data["coupon"])
+				print(coupon_url + coupon)
+				response = http_client.fetch(coupon_url + coupon)
 				coupon_data = tornado.escape.json_decode(response.body)
 				percent_off = coupon_data["percentOff"]
 				amount = int(amount - (amount * percent_off / 100))
@@ -159,25 +190,27 @@ class PackageHandler(tornado.web.RequestHandler):
 
 		if free:
 			binary_zip = create_zip_and_send(str(uuid.uuid4()), home, data)
+			use_unique_coupon(coupon)
 			self.write(binary_zip)
 		else:
 			now_date = datetime.now()
-			print("[{0}] Charging {1} for {2}{3}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"], amount, data["currency"]))
+			print("Charging {0} for {1}{2}".format(data["email"], amount, data["currency"]))
 			stripe_response = create_stripe_payment(
-				data["source"],
-				amount,
-				data["currency"],
-				data["description"],
-				data["email"],
-				data["family"]
-			)
+					data["source"],
+					amount,
+					data["currency"],
+					data["description"],
+					data["email"],
+					data["family"],
+					coupon
+					)
 			if "error" in stripe_response:
 				print("Cannot package for payment " + data["paymentNumber"])
 				self.set_status(401)
 				self.set_header("Content-Type", "application/json");
 				self.write({"error": {"reason": "payment failed"}})
 			else:
-				print("[{0}] Charged succesfully {1} for {2}{3}".format(now_date.strftime("%d/%m/%Y %I:%M%p"), data["email"], amount, data["currency"]))
+				print("Charged succesfully {0} for {1}{2}".format(data["email"], amount, data["currency"]))
 				binary_zip = create_zip_and_send(stripe_response.id, home, data)
 				try:
 					upload_to_s3(binary_zip, data["projectId"])
@@ -209,7 +242,9 @@ if __name__ == "__main__":
 	app = make_app()
 
 port = 8003
+
 if "PYTHON_ENV" in os.environ:
 	port = 8004
+
 app.listen(port)
 tornado.ioloop.IOLoop.current().start()
