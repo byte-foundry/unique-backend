@@ -37,7 +37,7 @@ def get_html_email():
           <tr>
             <td valign="top">
               <h2 style="color: #000; font-size: 26px; font-weight: bold;">Hi!</h2>
-              <p style="color: #a9acaf; font-size: 16px; line-height: 28px; text-align: left;">Yay, you made it, you’ve created a brand new font ready to use in all your projects! We’re so proud of you. <br/> For your reference, we’ve attached your invoice and your fonts in this email.
+              <p style="color: #a9acaf; font-size: 16px; line-height: 28px; text-align: left;">Yay, you made it, you’ve created a brand new font ready to use in all your projects! We’re so proud of you. <br/> For your reference, we’ve attached your fonts in this email. You should receive the invoice in another email soon.
               </p>
               <p style="color: #a9acaf; font-size: 16px; line-height: 28px; text-align: left;">In case you’ll be back to create an account or visit your Unique font library, we will store your font and look after it for you.
               </p>
