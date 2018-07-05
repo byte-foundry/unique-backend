@@ -78,7 +78,7 @@ def create_zip(zip_name, zip_id, home, family, fonts):
 		font_file.close()
 
 	html = HTML(filename="specimen.html")
-	css = CSS(string=".cus-font { font-family: " + family + ";}")
+	css = CSS(string=".cus-font { font-family: '" + family + "';}")
 	pdf = html.write_pdf(stylesheets=[css])
 
 	zip_to_send.writestr("specimen.pdf", pdf)
