@@ -48,7 +48,7 @@ def send_customer_email(zip_file, email, family_name):
 
 	msg.attach(MIMEText('''Hi!
 Yay, you made it, you’ve created a brand new font ready to use in all your projects! We’re so proud of you.
-For your reference, we’ve attached your invoice and your fonts in this email.
+For your reference, we’ve attached your fonts in this email. You should receive the invoice in another email soon.
 
 In case you’ll be back to create an account or visit your Unique font library, we will store your font and look after it for you.
 
@@ -77,8 +77,13 @@ def create_zip(zip_name, zip_id, home, family, fonts):
 		zip_to_send.writestr(family + " " + font["variant"] + ".otf", font_bytes)
 		font_file.close()
 
+	#Add readme
+	readme_file = open("README.txt", "r");
+	zip_to_send.writestr("README.txt", readme_file.read())
+	readme_file.close()
+
 	html = HTML(filename="specimen.html")
-	css = CSS(string=".cus-font { font-family: " + family + ";}")
+	css = CSS(string=".cus-font { font-family: '" + family + "';}")
 	pdf = html.write_pdf(stylesheets=[css])
 
 	zip_to_send.writestr("specimen.pdf", pdf)
