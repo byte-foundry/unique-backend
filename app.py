@@ -77,6 +77,11 @@ def create_zip(zip_name, zip_id, home, family, fonts):
 		zip_to_send.writestr(family + " " + font["variant"] + ".otf", font_bytes)
 		font_file.close()
 
+	#Add readme
+	readme_file = open("README.txt", "r");
+	zip_to_send.writestr("README.txt", readme_file.read())
+	readme_file.close()
+
 	html = HTML(filename="specimen.html")
 	css = CSS(string=".cus-font { font-family: '" + family + "';}")
 	pdf = html.write_pdf(stylesheets=[css])
